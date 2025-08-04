@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Meta-Analysis Exercise: Standardising Regression Coefficients</title>
+<title>Meta-Analysis Exercise: Does Grazing Exclusion Increase Plant Richness?</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,46 +57,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="Meta-Analysis Exercise2_files/libs/clipboard/clipboard.min.js"></script>
-<script src="Meta-Analysis Exercise2_files/libs/quarto-html/quarto.js"></script>
-<script src="Meta-Analysis Exercise2_files/libs/quarto-html/popper.min.js"></script>
-<script src="Meta-Analysis Exercise2_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="Meta-Analysis Exercise2_files/libs/quarto-html/anchor.min.js"></script>
-<link href="Meta-Analysis Exercise2_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Meta-Analysis Exercise2_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="Meta-Analysis Exercise2_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="Meta-Analysis Exercise2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Meta-Analysis Exercise2_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="Meta-Analysis_Exercise_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Meta-Analysis_Exercise_files/libs/quarto-html/quarto.js"></script>
+<script src="Meta-Analysis_Exercise_files/libs/quarto-html/popper.min.js"></script>
+<script src="Meta-Analysis_Exercise_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Meta-Analysis_Exercise_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Meta-Analysis_Exercise_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Meta-Analysis_Exercise_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Meta-Analysis_Exercise_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Meta-Analysis_Exercise_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Meta-Analysis_Exercise_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -108,7 +79,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Meta-Analysis Exercise: Standardising Regression Coefficients</h1>
+<h1 class="title">Meta-Analysis Exercise: Does Grazing Exclusion Increase Plant Richness?</h1>
 </div>
 
 
@@ -127,69 +98,56 @@ window.Quarto = {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Each study below estimates the <strong>effect of temperature</strong> on <strong>insect abundance</strong> using a simple linear regression.</p>
-<p>You’ll extract and <strong>standardise the regression coefficients</strong> so they are comparable, then run a meta-analysis using <code>metafor</code>.</p>
-<section id="load-packages" class="level2">
-<h2 class="anchored" data-anchor-id="load-packages">Load packages</h2>
+<p>You will extract data from 7 simulated ecological studies that all examine the <strong>effect of grazing exclusion</strong> on <strong>plant species richness</strong>.</p>
+<p>Your task is to compute <strong>Hedges’ g</strong> for each study, then combine results in a meta-analysis using the <code>metafor</code> package.</p>
+</section>
+<section id="load-packages" class="level1">
+<h1>Load packages</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metafor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metafor)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Study 1</em>: Temperate Grassland (USA)</p>
+<p>In Minnesota, plant species richness averaged 14.2 (SD = 2.1) in grazed plots (n = 10) and 17.8 (SD = 2.4) in exclosures (n = 10).</p>
+<p><em>Study 2</em>: Mediterranean Pasture</p>
+<p>In Spain, grazed areas (n = 15) had a mean richness of 12.1 (SD = 2.5), while exclosure plots had 14.7 species (SD = 2.2; n = 15).</p>
+<p><em>Study 3</em>: Alpine Meadow (Switzerland)</p>
+<p>Richness in grazed plots was 13.8 (95% CI: 12.6–15.0; n = 12), compared to 16.3 (SD = 2.1; n = 12) in exclosures.</p>
+<p><strong>Hint: To convert CI to SD use:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CI to SD: SD ≈ (upper - lower) / (2 * t)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ci_upper <span class="ot">&lt;-</span> <span class="co">#</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ci_lower <span class="ot">&lt;-</span> <span class="co">#</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>t_crit <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="dv">11</span>)<span class="co"># 1 less than n</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> (ci_upper <span class="sc">-</span> ci_lower) <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> t_crit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Study 4</em>: Semi-arid Shrubland</p>
+<p>Exclosure plots (n = 8) had 11.2 species on average (SD = 1.9). Grazed plots (n = 8) had 9.5 (SD = 2.0).</p>
+<p><em>Study 5</em>: African Savanna</p>
+<p>Grazed plots (mean = 10.5, SE = 0.6, n = 10); Exclosures (mean = 13.2, SE = 0.5, n = 10)</p>
+<p><strong>Hint: Convert SE to SD: SD = SE * sqrt(n)</strong></p>
+<p><em>Study 6</em>: Boreal Forest Edge</p>
+<p>Exclosures: mean = 16.4, SD = 2.8, n = 9. Grazed: mean = 14.3, SD = 2.1. Sample sise for grazed plots not given, but design was fully balanced.</p>
+<p><em>Study 7</em>: Tropical Highlands</p>
+<p>Species richness in grazed plots was 20.1 (SD = 2.5), while in exclosures it rose to 22.9 (SD = 3.1), with 11 plots in each treatment.</p>
+<section id="build-a-data-table" class="level2">
+<h2 class="anchored" data-anchor-id="build-a-data-table">Build a Data Table</h2>
+<p>Use <code>?escalc</code> to see what the correct arguments are.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add your escalc results as rows</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>all_es <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># escalc(measure = "SMD", ...)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="formula-reminder" class="level2">
-<h2 class="anchored" data-anchor-id="formula-reminder">Formula Reminder</h2>
-<p>To standardise a regression slope β:</p>
-<p><span class="math display">\[
-\beta_{\text{standardised}} = \beta \cdot \frac{\text{SD}_X}{\text{SD}_Y}
-\]</span></p>
-<p>And for the standard error:</p>
-<p><span class="math display">\[SE std = SE raw * \frac{\text{SD}_X}{\text{SD}_Y}\]</span></p>
-<p><em>Study 1</em>: Temperate Forest</p>
-<p>A study in New Hampshire found that insect abundance increased by 2.3 individuals per °C (SE = 0.6). The standard deviation of temperature was 3.8°C, and the SD of abundance was 18.5.</p>
-<p><em>Study 2</em>: Agricultural Field</p>
-<p>Regression slope: 1.1 (SE = 0.3). SD of temp = 4.2; SD of abundance = 12.3</p>
-<p><em>Study 3</em>: Tropical Rainforest</p>
-<p>β = 0.9 (SE = 0.2); SD_temp = 2.5, SD_abundance = 6.0</p>
-<p><em>Study 4</em>: Urban Garden Network</p>
-<p>The slope of the regression was 3.4 individuals per °C (SE = 0.9). SD of temp = 5.1, SD of abundance = 20.1.</p>
-<p><em>Study 5</em>: Alpine Meadow</p>
-<p>Insects were more sensitive in colder climates: β = 1.7 (SE = 0.5), with SD of temp = 3.0 and SD of abundance = 10.2.</p>
-</section>
-<section id="combine-your-results" class="level2">
-<h2 class="anchored" data-anchor-id="combine-your-results">Combine Your Results</h2>
+<section id="meta-analysis-forest-plot" class="level2">
+<h2 class="anchored" data-anchor-id="meta-analysis-forest-plot">Meta-Analysis &amp; Forest Plot</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example structure</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">study =</span> <span class="fu">paste0</span>(<span class="st">"Study_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>),</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">beta_raw =</span> <span class="fu">c</span>(, , , , ),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">se_raw =</span> <span class="fu">c</span>(, , , , ),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_temp =</span> <span class="fu">c</span>(, , , , ),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_abund =</span> <span class="fu">c</span>(, , , , )</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta_std =</span> beta_raw <span class="sc">*</span> (sd_temp <span class="sc">/</span> sd_abund),</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_std =</span> se_raw <span class="sc">*</span> (sd_temp <span class="sc">/</span> sd_abund),</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">vi_std =</span> se_std<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> all_es) <span class="co"># change this to a suitable model type</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">forest</span>(res, <span class="at">xlab =</span> <span class="st">"Hedges' g (Effect of Grazing Exclusion on Richness)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="meta-analysis-and-forest-plot" class="level2">
-<h2 class="anchored" data-anchor-id="meta-analysis-and-forest-plot">Meta-Analysis and Forest Plot</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">rma</span>(<span class="at">yi =</span> beta_std, <span class="at">vi =</span> vi_std, <span class="at">data =</span> dat) <span class="co"># change this to the correct model type</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">forest</span>(res, <span class="at">slab =</span> dat<span class="sc">$</span>study,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">"Standardised Effect (SD change in abundance per SD temp)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="interpretation" class="level2">
-<h2 class="anchored" data-anchor-id="interpretation">Interpretation</h2>
-<ul>
-<li><p>You are now meta-analysing standardised slopes</p></li>
-<li><p>Unitless: interpretable as “effect per SD increase in temperature”</p></li>
-<li><p>Useful when raw units differ across studies</p></li>
-</ul>
 </section>
 </section>
 
