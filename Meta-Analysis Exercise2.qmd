@@ -1,0 +1,96 @@
+---
+title: "Meta-Analysis Exercise: Standardising Regression Coefficients"
+format: html
+editor: visual
+---
+
+# Introduction
+
+Each study below estimates the **effect of temperature** on **insect abundance** using a simple linear regression.
+
+You’ll extract and **standardise the regression coefficients** so they are comparable, then run a meta-analysis using `metafor`.
+
+## Load packages
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+library(dplyr)
+library(metafor)
+```
+
+## Formula Reminder
+
+To standardise a regression slope β:
+
+$$
+\beta_{\text{standardised}} = \beta \cdot \frac{\text{SD}_X}{\text{SD}_Y}
+$$
+
+And for the standard error:
+
+$$SE std = SE raw * \frac{\text{SD}_X}{\text{SD}_Y}$$
+
+*Study 1*: Temperate Forest
+
+A study in New Hampshire found that insect abundance increased by 2.3 individuals per °C (SE = 0.6). The standard deviation of temperature was 3.8°C, and the SD of abundance was 18.5.
+
+*Study 2*: Agricultural Field
+
+Regression slope: 1.1 (SE = 0.3). SD of temp = 4.2; SD of abundance = 12.3
+
+*Study 3*: Tropical Rainforest
+
+β = 0.9 (SE = 0.2); SD_temp = 2.5, SD_abundance = 6.0
+
+*Study 4*: Urban Garden Network
+
+The slope of the regression was 3.4 individuals per °C (SE = 0.9). SD of temp = 5.1, SD of abundance = 20.1.
+
+*Study 5*: Alpine Meadow
+
+Insects were more sensitive in colder climates: β = 1.7 (SE = 0.5), with SD of temp = 3.0 and SD of abundance = 10.2.
+
+## Combine Your Results
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+#| eval: false # you need to change this when you do the exercise to true
+
+# Example structure
+dat <- data.frame(
+  study = paste0("Study_", 1:5),
+  beta_raw = c(, , , , ),
+  se_raw = c(, , , , ),
+  sd_temp = c(, , , , ),
+  sd_abund = c(, , , , )
+)
+
+dat <- dat |>
+  mutate(
+    beta_std = beta_raw * (sd_temp / sd_abund),
+    se_std = se_raw * (sd_temp / sd_abund),
+    vi_std = se_std^2
+  )
+```
+
+## Meta-Analysis and Forest Plot
+
+```{r}
+#| eval: false # you need to change this when you do the exercise to true
+res <- rma(yi = beta_std, vi = vi_std, data = dat) # change this to the correct model type
+forest(res, slab = dat$study,
+       xlab = "Standardised Effect (SD change in abundance per SD temp)")
+
+```
+
+## Interpretation
+
+-   You are now meta-analysing standardised slopes
+
+-   Unitless: interpretable as "effect per SD increase in temperature"
+
+-   Useful when raw units differ across studies

@@ -1,0 +1,105 @@
+---
+title: "Meta-Analysis Exercise: Does Grazing Exclusion Increase Plant Richness?"
+format: html
+editor: visual
+---
+
+
+
+# Introduction
+
+You will extract data from 7 simulated ecological studies that all examine the **effect of grazing exclusion** on **plant species richness**.
+
+Your task is to compute **Hedges’ g** for each study, then combine results in a meta-analysis using the `metafor` package.
+
+# Load packages
+
+
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+library(metafor)
+library(tidyverse)
+```
+
+
+
+*Study 1*: Temperate Grassland (USA)
+
+In Minnesota, plant species richness averaged 14.2 (SD = 2.1) in grazed plots (n = 10) and 17.8 (SD = 2.4) in exclosures (n = 10).
+
+*Study 2*: Mediterranean Pasture
+
+In Spain, grazed areas (n = 15) had a mean richness of 12.1 (SD = 2.5), while exclosure plots had 14.7 species (SD = 2.2; n = 15).
+
+*Study 3*: Alpine Meadow (Switzerland)
+
+Richness in grazed plots was 13.8 (95% CI: 12.6–15.0; n = 12), compared to 16.3 (SD = 2.1; n = 12) in exclosures.
+
+**Hint: To convert CI to SD use:**
+
+
+
+```{r}
+#| eval: false # you need to change this when you do the exercise to true
+# CI to SD: SD ≈ (upper - lower) / (2 * t)
+ci_upper <- #
+ci_lower <- #
+t_crit <- qt(0.975, df = 11)# 1 less than n
+
+sd <- (ci_upper - ci_lower) / (2 * t_crit)
+
+```
+
+
+
+*Study 4*: Semi-arid Shrubland
+
+Exclosure plots (n = 8) had 11.2 species on average (SD = 1.9). Grazed plots (n = 8) had 9.5 (SD = 2.0).
+
+*Study 5*: African Savanna
+
+Grazed plots (mean = 10.5, SE = 0.6, n = 10); Exclosures (mean = 13.2, SE = 0.5, n = 10)
+
+**Hint: Convert SE to SD: SD = SE \* sqrt(n)**
+
+*Study 6*: Boreal Forest Edge
+
+Exclosures: mean = 16.4, SD = 2.8, n = 9. Grazed: mean = 14.3, SD = 2.1. Sample sise for grazed plots not given, but design was fully balanced.
+
+*Study 7*: Tropical Highlands
+
+Species richness in grazed plots was 20.1 (SD = 2.5), while in exclosures it rose to 22.9 (SD = 3.1), with 11 plots in each treatment.
+
+## Build a Data Table
+
+Use `?escalc` to see what the correct arguments are.
+
+
+
+```{r}
+#| echo: true
+#| eval: false # you need to change this when you do the exercise to true
+# Add your escalc results as rows
+all_es <- bind_rows(
+  # escalc(measure = "SMD", ...)
+)
+```
+
+
+
+## Meta-Analysis & Forest Plot
+
+
+
+```{r}
+#| echo: true
+#| eval: false # you need to change this when you do the exercise to true
+
+res <- rma(yi, vi, data = all_es) # change this to a suitable model type
+
+forest(res, xlab = "Hedges' g (Effect of Grazing Exclusion on Richness)")
+```
+

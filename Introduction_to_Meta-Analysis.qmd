@@ -1,0 +1,476 @@
+---
+title: "Introduction to Meta-Analysis"
+author: Matthew Grainger
+email: matthew.grainger@nina.no
+format:
+  revealjs:
+    css: juno.css
+    slide-number: true
+    show-slide-number: all
+    logo: images/JUNO_TAGLINE.png
+editor: visual
+---
+
+## What is Meta-Analysis?
+
+-   Meta-analysis is a statistical technique to combine results from multiple studies to get a clearer, more reliable picture
+
+-   Say we want to know whether grazing reduces plant biodiversity. Studies disagree—some show decreases, some no effect, some even increases. Meta-analysis helps us quantify the overall trend
+
+## Why Meta-Analysis?
+
+-   Handles variation across studies
+
+-   Can improve power and precision
+
+-   Helps move beyond “vote-counting” (i.e., tallying +/– effects)
+
+## What is Vote-counting
+
+![](images/clipboard-163317285.png)
+
+## 
+
+![](images/clipboard-688738285.png)
+
+## 
+
+![](images/clipboard-3885116124.png)
+
+# Core concepts
+
+## Effect size
+
+-   **Effect size** – *"A standardised way to compare results (e.g., log response ratio)."*
+
+[Effect sizes](https://matthewbjane.quarto.pub/Guide-to-Effect-Sizes-and-Confidence-Intervals.pdf "Detailed overview of different effect sizes") are key to synthesising study results in meta-analysis, as they provide a standardised way of comparing findings across studies. Common effect sizes include the standardised mean difference (Hedges' g in ecology), correlation coefficient, and log-transformed response ratio (lnRR).
+
+## Effect size - SMD
+
+We have data from six fictional studies that examined species abundance before and after restoration efforts. The dataset includes: - Sample sizes before and after restoration (`n1` and `n2`). - Mean species abundance before and after (`m1` and `m2`). - Standard deviations of abundance before and after (`sd1` and `sd2`).
+
+## 
+
+| Study        | N (Before) | N (After) | Mean (B) | Mean (A) | SD (B) | SD (A) |
+|--------------|------------|-----------|----------|----------|--------|--------|
+| Smith_2015   | 30         | 28        | 5.2      | 3.9      | 1.1    | 0.9    |
+| Johnson_2017 | 50         | 48        | 6.1      | 5.4      | 1.3    | 1.1    |
+| Lee_2018     | 45         | 44        | 5.9      | 5.3      | 1.0    | 0.8    |
+| Gomez_2016   | 32         | 30        | 4.8      | 4.2      | 1.2    | 1.0    |
+| Patel_2019   | 40         | 39        | 5.5      | 4.9      | 1.4    | 1.2    |
+| Chen_2020    | 35         | 33        | 5.1      | 4.5      | 1.2    | 1.1    |
+
+## 
+
+The **standardised mean difference (SMD)** between e.g. restored and control sites is calculated as follows:
+
+$$\text{SMD} = \frac{\text{mean}_{\text{restored}} - \text{mean}_{\text{control}}}{\text{pooled standard deviation}}$$ Where the **pooled standard deviation** is calculated as:
+
+$$2SD_{\text{pooled}} = \sqrt{\frac{(n_{\text{restored}} - 1) \cdot SD_{\text{restored}}^2 + (n_{\text{control}} - 1) \cdot SD_{\text{control}}^2}{n_{\text{restored}} + n_{\text{control}} - 2}}$$
+
+## Effect size LnRR
+
+-   The **log response ratio (LnRR)** is another common effect size used in meta-analysis, particularly in ecology. It is calculated as:
+
+$$\text{LnRR} = \ln\left(\frac{\text{mean}_{\text{treatment}}}{\text{mean}_{\text{control}}}\right)$$
+
+-   The **log response ratio** is useful because it can handle ratios that are less than 1 (i.e., negative effects) and is symmetric around zero.
+
+## 
+
+Imagine a study comparing biodiversity in grazed vs. ungrazed grasslands:
+
+| Group    | Mean Biodiversity | Standard Deviation | Sample Size |
+|----------|-------------------|--------------------|-------------|
+| Grazed   | 15.2              | 2.5                | 30          |
+| Ungrazed | 18.6              | 3.1                | 28          |
+
+We calculate the effect size as: $$\text{-0.202} = \ln\left(\frac{\text{15.2}}{\text{18.6}}\right)$$
+
+## 
+
+Interpretation
+
+-   LnRR \> 0: Treatment increases the outcome
+
+-   LnRR \< 0: Treatment decreases the outcome
+
+-   LnRR ≈ 0: No effect
+
+-   In our example, the negative LnRR suggests grazing reduces biodiversity in this study
+
+## Variance
+
+-   **Variance/weighting** – *"More precise studies get more influence in the pooled estimate."*
+-   In meta-analysis, not all studies are treated equally. Some studies provide more precise estimates than others, and variance (uncertainty) helps determine their weight in the overall analysis.
+
+## 
+
+-   Each study reports an effect size (e.g., LnRR) and a measure of its uncertainty. The variance of an effect size is calculated as:
+
+$$v_i = \frac{SD_1^2}{n_1 \cdot \text{Mean}_1^2} + \frac{SD_2^2}{n_2 \cdot \text{Mean}_2^2}$$
+
+## How Variance Affects Study Weighting
+
+-   Studies with smaller variance (precise estimates, large sample size, low SD) get higher weight.
+
+-   Studies with higher variance (uncertain estimates, small sample size, high SD) get lower weight.
+
+-   In a random-effects meta-analysis, we also account for between-study heterogeneity (τ²), which represents true variation beyond sampling error.
+
+## 
+
+| Study                      | LnRR  | Variance (vi) | Weight in Meta-Analysis |     |
+|-------------------|-------------|-------------|-----------------|-------------|
+| Study A (Large n, Low SD)  | -0.20 | 0.01          | High ✅                  |     |
+| Study B (Small n, High SD) | -0.20 | 0.10          | Low ❌                   |     |
+
+Even though both studies report the same effect size (-0.20), Study A gets more weight because it is more precise.
+
+## Fixed vs. random effects
+
+-   In a fixed-effect model, we assume that all studies estimate the same true effect.
+-   In contrast, a random-effects model assumes that each study estimates its own effect size, accounting for between-study variability.
+
+## Fixed effect
+
+![](images/clipboard-3554449211.png)
+
+## Random effects
+
+![](images/clipboard-268787001.png)
+
+## Multi-level models
+
+-   Accounts for hierarchical data structures
+    -   e.g. multiple sites for a single study or multiple measurements from one site
+    -   e.g. multiple studies on the same species or taxonomic groups
+-   Normally the method we use in ecology
+
+## 
+
+![](images/clipboard-2459106515.png)
+
+## Heterogeneity - the fun part!
+
+-   Heterogeneity is one of the most critical aspects of meta-analysis—it tells us whether the effect sizes across studies are similar or highly variable.
+
+-   Recognising and handling heterogeneity is essential for drawing reliable conclusions.
+
+-   The expectation of heterogeneity is the main difference between medicine and ecology meta-analysis.
+
+## What is Heterogeneity?
+
+-   Heterogeneity refers to the variation in effect sizes across studies. If all studies estimate the same true effect, the only differences between them should be due to sampling error. However:
+    -   Biological & ecological differences
+    -   Methodological differences
+    -   Publication effects
+-   When heterogeneity is high, a simple average of effect sizes may not be meaningful
+
+## Understanding the outputs from a meta-analysis
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| 
+dat <- read.csv(text = "
+Study_ID,Habitat,Grazed_Mean,Grazed_SD,Grazed_N,Ungrazed_Mean,Ungrazed_SD,Ungrazed_N
+Smith_2012,Grassland,15.2,2.5,30,18.6,3.1,28
+Chen_2015,Woodland,12.4,1.8,25,14.7,2.0,27
+Lopez_2018,Heathland,10.9,2.0,20,9.8,1.7,22
+Ahmed_2020,Grassland,17.1,2.9,35,19.3,3.0,33
+Brown_2017,Savanna,8.4,1.5,18,10.2,1.8,20
+Nguyen_2014,Woodland,13.6,2.2,30,13.1,2.3,29
+Jones_2011,Grassland,14.3,2.4,22,15.0,2.5,24
+Müller_2016,Heathland,9.5,1.3,20,8.1,1.5,19
+Gomez_2013,Savanna,11.8,2.1,28,12.4,2.0,30
+Patel_2019,Woodland,16.2,2.6,27,17.8,2.7,26
+")
+
+library(metafor)
+# Calculate effect sizes and variances
+dat$Grazed_Mean <- as.numeric(dat$Grazed_Mean)
+dat$Grazed_SD <- as.numeric(dat$Grazed_SD)
+dat$Grazed_N <- as.numeric(dat$Grazed_N)
+dat$Ungrazed_Mean <- as.numeric(dat$Ungrazed_Mean)
+dat$Ungrazed_SD <- as.numeric(dat$Ungrazed_SD)
+dat$Ungrazed_N <- as.numeric(dat$Ungrazed_N)
+dat$yi <- escalc(measure = "ROM", m1i = Grazed_Mean, sd1i = Grazed_SD, n1i = Grazed_N,
+                 m2i = Ungrazed_Mean, sd2i = Ungrazed_SD, n2i = Ungrazed_N, data = dat)
+dat$vi <- dat$yi$vi
+
+# Run a random-effects meta-analysis
+res <- rma(yi, vi, data = dat, method = "REML")
+# Print the results
+print(res)
+
+```
+
+## 
+
+-   Random-Effects Model (k = 10; tau² estimator: REML)
+
+    -   You are analysing 10 effect sizes (k = 10) using a random-effects model, meaning you assume each study is estimating a different but related true effect size
+    -   The REML (Restricted Maximum Likelihood) method is used to estimate between-study variance.
+
+## Between-Study Variance
+
+**tau² = 0.0128 (SE = 0.0071)**
+
+This is the estimated amount of heterogeneity (real variation) in true effect sizes between studies.
+
+*Interpretation:*
+
+The larger this value, the more variation exists among study results beyond random sampling error. It’s in squared units of your effect size
+
+## Standard Deviation of True Effects
+
+**tau = 0.1131**
+
+This is simply the square root of tau². It gives the standard deviation of true effect sizes across studies.
+
+*Interpretation:* On average, true effect sizes vary by \~0.11 around the average effect size.
+
+## Proportion of Variability Due to Heterogeneity
+
+**I² = 85.89%**
+
+This tells you the percentage of total variability in effect sizes that is due to real differences between studies, rather than random chance.
+
+*Interpretation:* A very high I² (86%) means most of the variation is likely due to actual differences in study context (e.g., species, location, design) — not just sampling error.
+
+## Ratio of Total to Sampling Variability
+
+**H² = 7.09** This tells you how much bigger the total variability is compared to what you’d expect from sampling error alone.
+
+*Interpretation:* The observed variability in effect sizes is about 7 times larger than what we’d expect if all studies were estimating the same true effect size.
+
+## Test for Heterogeneity
+
+**Q(df = 9) = 58.14, p \< .0001**
+
+This is Cochran’s Q test, which tests if observed variability is more than expected by chance.
+
+*Interpretation:* Since the p-value is very small (\< 0.0001), we reject the null hypothesis of homogeneity.There is significant heterogeneity — studies are not all estimating the same effect.
+
+⚠️ Caveat: The Q test can be overly sensitive with many studies, and underpowered with few.
+
+## Overall Effect Size Estimate
+
+| Estimate | SE     | Z-value | p-value | CI (95%)          |     |
+|----------|--------|---------|---------|-------------------|-----|
+| -0.0593  | 0.0387 | -1.53   | 0.1260  | -0.1352 to 0.0167 |     |
+
+Estimate: The average effect size is -0.0593.
+
+CI includes 0, and p = 0.126, so the effect is not statistically significant at the 0.05 level.
+
+This suggests there's no consistent directional effect, but the high heterogeneity indicates the effects may differ across contexts.
+
+## 
+
+`In this meta-analysis, we found high heterogeneity (I² = 86%) among studies. This suggests that true effect sizes vary meaningfully across ecological contexts—perhaps due to different species, ecosystems, or study designs.The estimated average effect was small and not statistically significant, but given the variation across studies, this average may not be meaningful on its own.`
+
+# 🌳 From Forest Plots to Orchard Plots 🍊: Visualising Meta-Analysis Results
+
+## 🌲 Forest Plots: The Classic View
+
+-   Show individual study effect sizes with confidence intervals
+
+-   Easy to interpret, especially for significance and precision
+
+-   Great for small to moderate numbers of studies
+
+BUT... can get cluttered and hard to read with many studies or subgroup comparisons
+
+## 🍊 Orchard Plots: A Modern, Flexible Alternative
+
+-   Summarise:
+    -   Study effect sizes (optionally grouped)
+    -   The overall model estimate (± CI)
+    -   Weighting of studies (as point size)
+-   Can show:
+    -   Meta-regression results
+    -   Multi-level models
+    -   Moderator effects
+
+## 
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(orchaRd)
+library(metafor)
+data(english)
+
+# We need to calculate the effect sizes, in this case d
+english <- escalc(measure = "SMD", n1i = NStartControl, sd1i = SD_C, m1i = MeanC,
+    n2i = NStartExpt, sd2i = SD_E, m2i = MeanE, var.names = c("SMD", "vSMD"), data = english)
+
+english_MA <- rma.mv(yi = SMD, V = vSMD, random = list(~1 | StudyNo, ~1 | EffectID),
+    data = english)
+#summary(english_MA)
+forest(english_MA)
+
+model_results <- orchaRd::mod_results(english_MA, mod = "1", at = NULL, group = "StudyNo")
+
+
+
+```
+
+## 
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+orchaRd::orchard_plot(english_MA, mod = "1", group = "StudyNo", xlab = "Standardised mean difference",
+    transfm = "none", twig.size = 0.5, trunk.size = 1)
+
+```
+
+## Regression Coefficients as Effect Sizes
+
+-   Sometimes studies report **regression coefficients** instead of group comparisons.
+-   These can be used directly as effect sizes if:
+    -   The predictor is consistent across studies (e.g., standardised)
+    -   The outcome is continuous
+-   Often extracted as **raw slopes**, **standardised** $\beta$, or **log-odds**
+
+## Extracting Regression Coefficients
+
+```{r}
+#| echo: true
+# Example: effect of temperature on bird abundance 
+
+study <- data.frame(study_id = 1:4, yi = c(0.12, 0.20, 0.05, 0.18), #regression slopes 
+                     sei = c(0.03, 0.04, 0.02, 0.05) )
+
+rma(yi, sei^2, data = study)
+
+```
+
+## 
+
+-   But must ensure effect direction is interpretable and consistent
+
+## Standardising Predictors or Outcomes
+
+-   If studies use different measurement scales:
+
+    -   **Convert to standardised** $\beta$ if possible
+
+    -   Or standardise both predictor and outcome before meta-analysis
+
+    -   Note: This can reduce heterogeneity and improve comparability
+
+## Standardising Regression Coefficients ($\beta$)
+
+-   Standardisation makes coefficients comparable across studies
+-   Formula (for a simple linear regression):
+
+$$
+\beta_{\text{standardised}} = \beta \cdot \frac{\text{SD}_X}{\text{SD}_Y}
+$$
+
+## 
+
+Where:
+
+-   ($\beta$): unstandardised slope (from paper)
+
+-   ($\text{SD}\_X$): SD of predictor (e.g. temperature)
+
+-   ($\text{SD}\_Y$): SD of outcome (e.g. abundance)
+
+## Example: Temperature Effect on Insect Abundance
+
+Study reports: $\beta$ = 2.5 (per $^\circ$C), temp SD = 5, abundance SD = 20
+
+```{r}
+#| echo: true
+beta_raw <- 2.5 
+sd_temp <- 5 
+sd_abund <- 20
+(beta_std <- beta_raw * (sd_temp / sd_abund) )
+
+#"A one SD increase in temperature is associated with a 0.625 SD increase in abundance."
+
+studies <- data.frame( beta = c(2.5, 1.2, 3.0, 0.8), sd_temp = c(5, 4, 6, 3), sd_abund = c(20, 10, 15, 8) )
+studies$beta_std <- with(studies, beta * (sd_temp / sd_abund)) 
+```
+
+You can now use beta_std as your yi values in rma() or rma.mv().
+
+## 
+
+::: callout-note
+Use SDs from within each study, not pooled
+:::
+
+If variances (SE/CI) are available for raw $\beta$, you can also transform the SEs: $$SE std = SE raw * \frac{\text{SD}_X}{\text{SD}_Y}$$
+
+-   Check study assumptions: linearity, normality, scale units
+
+## Funnel Plots & Multi-Level Meta-Analysis
+
+-   Traditional **funnel plots** assume **independent effect sizes**
+
+-   But in multilevel models, effects are nested (e.g., multiple per study)
+
+-   This violates the assumption - misleading asymmetry or overdispersion
+
+## 
+
+```{r}
+## A broken funnel
+
+data(dat.bangertdrowns2004) 
+dat <- dat.bangertdrowns2004  
+res_ml <- rma.mv(yi, vi, random = ~ 1 | author, data = dat)
+
+funnel(res_ml)  # Does not account for study-level clustering 
+```
+
+-   Visual inspection is unreliable
+
+-   Needs a method that accounts for dependency
+
+## Nakagawa et al.'s Solution (2022)
+
+-   Propose a **regression-based test** using residuals from multilevel model
+
+-   Regress **absolute residuals** (or squared residuals) on precision
+
+```{r}
+#| echo: true
+res <- rma.mv(yi, vi, random = ~ 1 | author, data = dat) 
+dat$resid <- resid(res) 
+dat$precision <- 1 / sqrt(dat$vi)  
+summary(lm(abs(resid) ~ precision, data = dat))
+
+```
+
+-   A significant slope indicates funnel asymmetry (small-study effects)
+
+-   Avoids misleading inferences from clustered data
+
+## Advantages of Residual Regression
+
+-   Compatible with multi-level models
+
+-   Avoids false positives in funnel asymmetry
+
+-   Reproducible and testable in `R`
+
+## Recommended literature {.smaller}
+
+Sarkis-Onofre, R., Catal�-L�pez, F., Aromataris, E. et al. How to properly use the PRISMA Statement. Syst Rev 10, 117 (2021). https://doi.org/10.1186/s13643-021-01671-z
+
+Nakagawa, S., Noble, D. W. A., Senior, A. M., & Lagisz, M. (2017). Meta-evaluation of meta-analysis: ten appraisal questions for biologists. BMC Biology, 15(1), 18. https://doi.org/10.1186/s12915-017-0357-7Harrer, M., Cuijpers, P., Furukawa, T. A., & Ebert, D. D. (2021). Doing Meta-Analysis With R: A Hands-On Guide (1st ed.). Chapman & Hall/CRC Press. https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/Nakagawa, S., Lagisz, M., O'Dea, R. E., Pottier, P., Rutkowska, J., Senior, A. M., Yang, Y., & Noble, D. W. A. (2023). orchaRd 2.0: An R package for visualising meta-analyses with orchard plots. Methods in Ecology and Evolution, 14(8), 2003-2010. https://doi.org/10.1111/2041-210x.14152
+
+Coe, R. (2002). It's the Effect Size - Stupid. Paper presented at the British Educational Research Association annual conference, Exeter, 12-14 September, 2002 https://f.hubspotusercontent30.net/hubfs/5191137/attachments/ebe/ESguide.pdf
