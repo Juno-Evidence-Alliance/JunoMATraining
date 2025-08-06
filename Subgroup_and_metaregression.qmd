@@ -20,6 +20,9 @@ This models the effect size as a function of one or more **continuous** (or cate
 ## Simulated Study Data
 
 ```{r}
+#| echo: true
+#| message: false
+#| warning: false
 library(metafor)
 library(orchaRd)
 
