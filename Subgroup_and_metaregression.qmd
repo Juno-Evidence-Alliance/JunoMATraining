@@ -1,0 +1,106 @@
+---
+title: "Subgroup Analysis and Meta-Regression"
+format: html
+---
+
+## Overview
+
+We simulate data from 10 ecological studies examining the effect of **plant diversity on herbivore abundance**. Each study provides a standardised mean difference (Hedges' g), variance, and some study-level characteristics.
+
+## Concepts
+
+### Subgroup Analysis
+
+This compares average effect sizes across **categorical** moderator groups (e.g. forest vs. grassland). It’s useful when you suspect that effects might differ by group.
+
+### Meta-Regression
+
+This models the effect size as a function of one or more **continuous** (or categorical) moderators using linear regression, and allows testing of moderation across a gradient (e.g. study duration).
+
+## Simulated Study Data
+
+```{r}
+library(metafor)
+library(orchaRd)
+
+# Simulated dataset
+set.seed(666) # for reproducibility 
+dat <- data.frame(
+  study_id = paste0("Study_", 1:10),
+  yi = rnorm(10, mean = 0.4, sd = 0.2), # effect size (Hedges' g)
+  vi = runif(10, 0.02, 0.07),           # variance of effect size
+  habitat = rep(c("Forest", "Grassland"), each = 5),
+  duration = sample(1:10, 10, replace = TRUE) # duration in years
+)
+
+dat
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+res <- rma(yi, vi, data = dat)
+res
+```
+What is the estimated average effect size?
+
+Is there evidence of heterogeneity (check Q-test or I²)?
+
+### Subgroup analysis by habitat
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+res_subgroup <- rma(yi, vi, mods = ~ factor(habitat), data = dat)
+res_subgroup
+```
+
+
+Are there differences between forest and grassland studies?
+
+Which habitat had the stronger effect?
+
+### Meta-regression on study duration
+
+```{r}
+res_meta_reg <- rma.mv(yi, vi, mods = ~ duration, random=~1|study_id, data = dat)
+res_meta_reg
+```
+Is there evidence that study duration explains variability in effect sizes?
+
+Interpret the slope coefficient.
+
+
+### Visualise the outcomes
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+forest(res_subgroup) 
+
+sub_model <- orchaRd::mod_results(res_subgroup, 
+                                     group = "study_id", 
+                                       mod = "habitat")
+  
+orchaRd::orchard_plot(sub_model, xlab = "Hedges g")
+
+reg_bubble <- orchaRd::mod_results(res_meta_reg, mod = "duration", group = "study_id")
+
+orchaRd::bubble_plot(reg_bubble, group = "study_id",  mod = "duration", xlab = "Years", legend.pos = "top.left")
+```
+
+
+```{r}
+library(meta)
+res_meta <- metagen(yi, sqrt(vi), studlab = study_id, data = dat, byvar = habitat)
+forest(res_meta)
+```
+
+
+
+
+
+
