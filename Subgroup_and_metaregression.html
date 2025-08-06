@@ -278,11 +278,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code>Loading 'meta' package (version 8.1-0).
 Type 'help(meta)' for a brief overview.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>res_meta <span class="ot">&lt;-</span> <span class="fu">metagen</span>(yi, <span class="fu">sqrt</span>(vi), <span class="at">studlab =</span> study_id, <span class="at">data =</span> dat, <span class="at">byvar =</span> habitat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Use argument 'subgroup' instead of 'byvar' (deprecated).</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">forest</span>(res_meta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>res_meta <span class="ot">&lt;-</span> <span class="fu">metagen</span>(yi, <span class="fu">sqrt</span>(vi), <span class="at">studlab =</span> study_id, <span class="at">data =</span> dat, <span class="at">subgroup =</span> habitat)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">forest</span>(res_meta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

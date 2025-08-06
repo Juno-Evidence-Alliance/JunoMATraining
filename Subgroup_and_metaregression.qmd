@@ -98,7 +98,7 @@ orchaRd::bubble_plot(reg_bubble, group = "study_id",  mod = "duration", xlab = "
 
 ```{r}
 library(meta)
-res_meta <- metagen(yi, sqrt(vi), studlab = study_id, data = dat, byvar = habitat)
+res_meta <- metagen(yi, sqrt(vi), studlab = study_id, data = dat, subgroup = habitat)
 forest(res_meta)
 ```
 
